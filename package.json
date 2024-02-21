@@ -1,0 +1,30 @@
+{
+  "name": "langchainbackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@dqbd/tiktoken": "^1.0.13",
+    "@langchain/community": "^0.0.31",
+    "@langchain/core": "^0.1.31",
+    "@langchain/openai": "^0.0.14",
+    "dotenv": "^16.4.5",
+    "hnswlib-node": "^1.4.2",
+    "langchain": "^0.1.20",
+    "node-gyp": "^10.0.1"
+  },
+
+  "resolutions": {
+    "@langchain/core": "0.1.5"
+  },
+  "overrides": {
+    "@langchain/core": "0.1.5"
+  }
+}
