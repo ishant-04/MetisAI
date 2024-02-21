@@ -2,7 +2,8 @@ import { DirectoryLoader } from "langchain/document_loaders/fs/directory";
 import { JSONLoader } from "langchain/document_loaders/fs/json";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 
-
+import express from "express";
+import multer from "multer";
 import { OpenAI } from "@langchain/openai";
 import { RetrievalQAChain } from "langchain/chains";
 import { HNSWLib } from "@langchain/community/vectorstores/hnswlib";
@@ -20,6 +21,30 @@ import dotenv from "dotenv";
 import fs from "fs";
 dotenv.config();
 
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+// 3. Initialize the multer storage engine
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './documents/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+
+// ...
+
+const upload = multer({ storage: storage })
+
+app.post('/upload', upload.array('files', 5), (req, res) => {
+  res.status(200).send('Files uploaded and stored in documents folder');
+});
 
 // 5. Initialize the document loader with supported file formats
 const loader = new DirectoryLoader("./documents", {
@@ -52,7 +77,7 @@ async function calculateCost() {
 }
 
 const VECTOR_STORE_PATH = "Documents.index";
-const question = "Tell me about these docs";
+// const question = "Tell me about these docs";
 
 // 8. Define a function to normalize the content of the documents
 function normalizeDocuments(docs) {
@@ -111,19 +136,28 @@ export const run = async () => {
 
     // 18. Create a retrieval chain using the language model and vector store
     console.log("Creating retrieval chain...");
-    const chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
+    global.chain = RetrievalQAChain.fromLLM(model, vectorStore.asRetriever());
 
-    // 19. Query the retrieval chain with the specified question
-    console.log("Querying chain...");
-    const res = await chain.call({ query: question });
-    console.log({ res });
   } else {
     // 20. If the cost exceeds the limit, skip the embedding process
     console.log("The cost of embedding exceeds $1. Skipping embeddings.");
   }
 };
 
-// 21. Run the main function
 run();
+
+// 19. Query the retrieval chain with the specified question
+app.post("/chat", async (req, res) => {
+    console.log("Querying chain...");
+    const question = req.headers.question;
+    const answer = await chain.call({ query: question });
+    console.log({ answer });
+    if(answer){
+      res.json({message: answer});
+    }  
+});
+
+// 21. Run the main function
+// run();
 
 
