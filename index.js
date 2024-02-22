@@ -90,9 +90,23 @@ function normalizeDocuments(docs) {
   });
 }
 
+//function to delete vector store
+function deleteDocumentsIndexFolder() {
+  const folderPath = "./Documents.index";
+
+  if (fs.existsSync(folderPath)) {
+    fs.rmdirSync(folderPath, { recursive: true });
+    console.log("documents.index folder deleted.");
+  } else {
+    console.log("documents.index folder does not exist.");
+  }
+}
+
 // 9. Define the main function to run the entire process
 export const run = async () => {
   // 10. Calculate the cost of tokenizing the documents
+
+
   console.log("Calculating cost...");
   const cost = await calculateCost();
   console.log("Cost calculated:", cost);
@@ -103,36 +117,29 @@ export const run = async () => {
     const model = new OpenAI({});
 
     let vectorStore;
+    
+    //
+    deleteDocumentsIndexFolder();
 
-    // 13. Check if an existing vector store is available
-    console.log("Checking for existing vector store...");
-    if (fs.existsSync(VECTOR_STORE_PATH)) {
-      // 14. Load the existing vector store
-      console.log("Loading existing vector store...");
-      vectorStore = await HNSWLib.load(
-        VECTOR_STORE_PATH,
-        new OpenAIEmbeddings()
-      );
-      console.log("Vector store loaded.");
-    } else {
-      // 15. Create a new vector store if one does not exist
-      console.log("Creating new vector store...");
-      const textSplitter = new RecursiveCharacterTextSplitter({
-        chunkSize: 1000,
-      });
-      const normalizedDocs = normalizeDocuments(docs);
-      const splitDocs = await textSplitter.createDocuments(normalizedDocs);
 
-      // 16. Generate the vector store from the documents
-      vectorStore = await HNSWLib.fromDocuments(
-        splitDocs,
-        new OpenAIEmbeddings()
-      );
-      // 17. Save the vector store to the specified path
-      await vectorStore.save(VECTOR_STORE_PATH);
+    // 15. Create a new vector store if one does not exist
+    console.log("Creating new vector store...");
+    const textSplitter = new RecursiveCharacterTextSplitter({
+      chunkSize: 1000,
+    });
+    const normalizedDocs = normalizeDocuments(docs);
+    const splitDocs = await textSplitter.createDocuments(normalizedDocs);
 
-      console.log("Vector store created.");
-    }
+    // 16. Generate the vector store from the documents
+    vectorStore = await HNSWLib.fromDocuments(
+      splitDocs,
+      new OpenAIEmbeddings()
+    );
+    // 17. Save the vector store to the specified path
+    await vectorStore.save(VECTOR_STORE_PATH);
+
+    console.log("Vector store created.");
+    
 
     // 18. Create a retrieval chain using the language model and vector store
     console.log("Creating retrieval chain...");
@@ -157,7 +164,5 @@ app.post("/chat", async (req, res) => {
     }  
 });
 
-// 21. Run the main function
-// run();
 
 
