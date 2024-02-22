@@ -4,28 +4,35 @@ let textFiles = [];
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'start') {
         // Inject the content script into each tab
-        chrome.tabs.query({}, tabs => {
-            tabs.forEach(tab => {
-                chrome.scripting.executeScript({
+        console.log('start');
+        chrome.tabs.query({currentWindow:true}, tabs => {
+            let promises = tabs.map(tab => {
+                console.log('tab', tab);
+                return chrome.scripting.executeScript({
                     target: {tabId: tab.id, allFrames: true},
                     files: ['contentscript.js']
+                }).then(() => {
+                    console.log('script executed');
+                    
+                    // Create a blob object from the text
+                    const blob = new Blob([request.text], { type: 'text/plain' });
+                    
+                    // Create a file object from the blob
+                    const file = new File([blob], `${tab.id}.txt`, {
+                        type: 'text/plain'
+                    });
+                    console.log("file created");
+
+                    // Add the file to the array
+                    textFiles.push(file);
+                    console.log("text files pushed");
                 });
             });
-        });
-    } else if (request.text) {
-        // Create a blob object from the text
-        const blob = new Blob([request.text], { type: 'text/plain' });
 
-        // Create a file object from the blob
-        const file = new File([blob], `${sender.tab.id}.txt`, {
-            type: 'text/plain'
+            Promise.all(promises).then(uploadFiles);
         });
-
-        // Add the file to the array
-        textFiles.push(file);
     }
 });
-
 
 // Function to upload files
 function uploadFiles() {
@@ -34,7 +41,7 @@ function uploadFiles() {
 
     // Add the text files to the FormData object
     textFiles.forEach((file, index) => {
-        formData.append(`files[${index}]`, file);
+        formData.append('files', file);
     });
 
     // Send the text files as the body of a POST request
@@ -55,6 +62,3 @@ function uploadFiles() {
         console.error('Error uploading files:', error);
     });
 }
-
-// Call uploadFiles function when you want to upload the files
-uploadFiles();

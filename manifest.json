@@ -1,5 +1,6 @@
 {
   "manifest_version": 3,
+  "host_permissions": ["<all_urls>"],
   "name": "Metis.AI",
   "version": "1.0",
   "permissions": ["scripting","tabs", "storage", "activeTab"],
