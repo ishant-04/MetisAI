@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Metis.AI",
+  "version": "1.0",
+  "permissions": ["scripting","tabs", "storage", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "th.png",
+      "48": "th.png",
+      "128": "th.png"
+    }
+  }
+}
