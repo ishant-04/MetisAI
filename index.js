@@ -24,6 +24,8 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
+let docs;
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
@@ -42,21 +44,23 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-app.post('/upload', upload.array('files', 5), (req, res) => {
-  res.status(200).send('Files uploaded and stored in documents folder');
-});
+app.post('/upload', upload.array('files', 5), async (req, res) => {
+  // Multer processes the files here
 
-// 5. Initialize the document loader with supported file formats
-const loader = new DirectoryLoader("./documents", {
+  // Load documents from the specified directory
+  const loader = new DirectoryLoader("./documents", {
     ".json": (path) => new JSONLoader(path),
     ".txt": (path) => new TextLoader(path),
   });
-  
+  console.log("Loading docs...");
+  docs = await loader.load();
+  console.log("Docs loaded.");
 
-// 6. Load documents from the specified directory
-console.log("Loading docs...");
-const docs = await loader.load();
-console.log("Docs loaded.");
+  // Call the run function
+  await run();
+
+  res.status(200).send('Files uploaded and stored in documents folder');
+});
 
 // 7. function to calculate the cost of tokenizing the documents
 async function calculateCost() {
@@ -151,7 +155,6 @@ export const run = async () => {
   }
 };
 
-run();
 
 // 19. Query the retrieval chain with the specified question
 app.post("/chat", async (req, res) => {
