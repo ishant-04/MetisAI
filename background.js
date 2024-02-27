@@ -15,8 +15,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                     console.log('script executed');
                     
                     // Create a blob object from the text
-                    const blob = new Blob([request.text], { type: 'text/plain' });
-                    
+                    const blob = new Blob([request.innerText], { type: 'text/plain' });
+                    console.log(request.innerText);
                     // Create a file object from the blob
                     const file = new File([blob], `${tab.id}.txt`, {
                         type: 'text/plain'
