@@ -20,11 +20,16 @@ This tool is deployed as a Chrome extension, making it easily accessible right f
 - You will see a popup asking for permission, click on "Allow".
 
 3. Setting up  backend
+
 step 1 : open MetisBackend folder
+
 step 2 : insert your chatgpt api key into the .env file.
+
 step 3 : open terminal inside MetisBackend folder
-step 3 : TERMINAL: npm install 
-step 4 : TERMINAL: node index.js
+
+step 4 : TERMINAL: npm install 
+
+step 5 : TERMINAL: node index.js
 
  
 ## HOW TO TEST
