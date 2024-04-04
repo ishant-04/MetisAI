@@ -12,24 +12,19 @@ This tool is deployed as a Chrome extension, making it easily accessible right f
 
 ## HOW TO SET UP
 
-1. clone/save the the files in your system 
+1. clone/save the files in your system 
 
 2. Installing the extension 
-- Open Google Chrome and go to `chrome://extensions` page by typing this link directly into the address bar (chrome://extensions).
-- Click on "Load Unpacked" (top-right-corner) and load the ExtensionFrontend folder  from cloned repository.
-- You will see a popup asking for permission, click on "Allow".
+   2.1 Open Google Chrome and go to `chrome://extensions` page by typing this link directly into the address bar (chrome://extensions).
+   2.2 Click on "Load Unpacked" (top-right-corner) and load the ExtensionFrontend folder from cloned repository.
+   2.3 You will see a popup asking for permission, click "Allow".
 
-3. Setting up  backend
-
-step 1 : open MetisBackend folder
-
-step 2 : insert your chatgpt api key into the .env file.
-
-step 3 : open terminal inside MetisBackend folder
-
-step 4 : TERMINAL: npm install 
-
-step 5 : TERMINAL: node index.js
+3. Setting up the backend
+   3.1 open MetisBackend folder
+   3.2 insert your chatgpt API key into the .env file.
+   3.3 open the terminal inside MetisBackend folder
+   3.4 TERMINAL: npm install 
+   3.5 TERMINAL: node index.js
 
  
 ## HOW TO TEST
