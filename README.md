@@ -10,7 +10,7 @@ This tool is deployed as a Chrome extension, making it easily accessible right f
 - Easy interaction through a chatbot interface
 - Convenient deployment as a Chrome extension
 
-# HOW TO SET UP
+## HOW TO SET UP
 
 1. clone/save the the files in your system 
 
@@ -27,7 +27,7 @@ step 3 : TERMINAL: npm install
 step 4 : TERMINAL: node index.js
 
  
-# HOW TO TEST
+## HOW TO TEST
 
 1. Once the extension is installed and the backend is set up, click on the MetisAI icon in the Chrome extension toolbar.
 
