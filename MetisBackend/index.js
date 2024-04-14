@@ -91,7 +91,7 @@ function normalizeDocuments(docs) {
   });
 }
 
-//function to delete vector store
+//function to delete vector store to get rid of old data
 function deleteDocumentsIndexFolder() {
   const folderPath = "./Documents.index";
 
